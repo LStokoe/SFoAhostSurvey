@@ -1,0 +1,39 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </head>
+
+    <body>
+        <h1>Lightning Out Test</h1>
+        <div id="lightning-out"></div>
+        <script src="https://lego--lilychina.sandbox.experience.sfcrmapps.cn/lightning/lightning.out.js"></script>
+        
+        <div data-lightning-out="true">
+            
+            <script>
+
+            const appName = 'c:srv_HostSurvey'
+            const componentName = 'c:srv_SurveyUI'
+            const lightningEndpoint = 'https://lego--lilychina.sandbox.experience.sfcrmapps.cn'
+            const targetElement = document.querySelector("[data-lightning-out]");
+            const componentAttributes = {};
+
+                $Lightning.use(
+                    appName,
+                    function () {
+                        $Lightning.createComponent(
+                            componentName,
+                            componentAttributes,
+                            targetElement,
+                            function (cmp) { 
+                                console.log('The component was created.');
+                            }
+                        );
+                    },
+                    lightningEndpoint
+                );
+            </script>
+        </div>
+    </body>
+</html>
