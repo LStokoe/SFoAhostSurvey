@@ -20,9 +20,10 @@
 
                 function getUrlParameter(name) {
                     const urlParams = new URLSearchParams(window.location.search);
-                    return urlParams.get(name);
-                    console.log('params found', {urlParams})
-                }
+                    const value = urlParams.get(name);
+                    console.log(`Parameter: ${name}, Value: ${value}`);
+                    return value;
+            }
 
                 const uuid = getUrlParameter('c__uuid');
                 const language = getUrlParameter('c__language');
@@ -33,6 +34,12 @@
                     language: language,
                     channelType: channelType
                 };
+
+                console.log('Component Attributes:', {
+                    uuid: uuid,
+                    language: language,
+                    channelType: channelType
+                });
 
                 $Lightning.use(
                     appName,
