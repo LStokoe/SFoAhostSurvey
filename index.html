@@ -5,10 +5,7 @@
     </head>
 
     <body>
-        <h1>Lightning Out Test</h1>
-        <p>UUID: {uuid}</p>
-        <p>Lang: {language}</p>
-        <p>Channel Type: {channelType}</p>
+        <h1>Lightning Out Test Host Page</h1>
         
         <div id="lightning-out"></div>
         <script src="https://lego--lilychina.sandbox.experience.sfcrmapps.cn/lightning/lightning.out.js"></script>
@@ -25,14 +22,13 @@
                 function getUrlParameter(name) {
                     const urlParams = new URLSearchParams(window.location.search);
                     return urlParams.get(name);
+                    console.log('params found', {urlParams})
                 }
 
-                // Extract URL parameters
                 const uuid = getUrlParameter('c__uuid');
                 const language = getUrlParameter('c__language');
                 const channelType = getUrlParameter('c__channelType');
 
-                // Set component attributes
                 const componentAttributes = {
                     uuid: uuid,
                     language: language,
