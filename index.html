@@ -5,7 +5,7 @@
     </head>
 
     <body>
-        <h1>Lightning Out Test Host Page</h1>
+        <h1>Lightning Out GitHub Page</h1>
         
         <div id="lightning-out"></div>
         <script src="https://lego--lilychina.sandbox.experience.sfcrmapps.cn/lightning/lightning.out.js"></script>
@@ -22,7 +22,7 @@
                 function getUrlParameter(name) {
                     const urlParams = new URLSearchParams(window.location.search);
                     const value = urlParams.get(name);
-                    console.log(`Parameter: ${name}, Value: ${value}`);
+                    console.log(`URL Parameters at start of function: ${name}, Value: ${value}`);
                     return value;
             }
 
@@ -36,12 +36,6 @@
                     channelType: channelType
                 };
 
-                console.log('Component Attributes:', {
-                    uuid: uuid,
-                    language: language,
-                    channelType: channelType
-                });
-
                 $Lightning.use(
                     appName,
                     function () {
@@ -52,7 +46,7 @@
                             function (cmp) { 
                                 console.log('The component was created.');
                                 console.log('component name; ', componentName);
-                                console.log('component attributes; ', componentAttributes);
+                                console.log('component attributes to be passed into aura; ', componentAttributes);
                             }
                         );
                     },
