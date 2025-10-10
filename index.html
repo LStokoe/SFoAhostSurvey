@@ -18,20 +18,15 @@
                 const lightningEndpoint = 'https://lego--lilychina.sandbox.experience.sfcrmapps.cn';
                 const targetElement = document.querySelector("[data-lightning-out]");
 
-                //Handles URL params passed in from the web page URL
-                urlParams = {};
-                function getPageReference(CurrentPageReference) {
-                    console.log('TIGER CurrentPageReference:', CurrentPageReference);
-                    if (CurrentPageReference) {
-                        this.urlParams = CurrentPageReference;
-                        this.uuid = this.urlParams.state.c__uuid;
-                        this.language = this.urlParams.state.c__language;
-                        this.channelType = this.urlParams.state.c__channelType || 'Email';
-                        console.log('TIGER UUID:', this.uuid);
-                        console.log('TIGER Language:', this.language);
-                        console.log('TIGER Channel Type:', this.channelType);
-                    } 
+                function getUrlParameter(name) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    return urlParams.get(name);
+                    console.log('params found', {urlParams})
                 }
+
+                const uuid = getUrlParameter('c__uuid');
+                const language = getUrlParameter('c__language');
+                const channelType = getUrlParameter('c__channelType');
 
                 const componentAttributes = {
                     uuid: uuid,
