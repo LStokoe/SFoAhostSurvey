@@ -16,12 +16,28 @@
         <div data-lightning-out="true">
             
             <script>
+                const appName = 'c:srv_HostSurvey';
+                const componentName = 'c:srv_SurveyUI';
+                const lightningEndpoint = 'https://lego--lilychina.sandbox.experience.sfcrmapps.cn';
+                const targetElement = document.querySelector("[data-lightning-out]");
 
-            const appName = 'c:srv_HostSurvey'
-            const componentName = 'c:srv_SurveyUI'
-            const lightningEndpoint = 'https://lego--lilychina.sandbox.experience.sfcrmapps.cn'
-            const targetElement = document.querySelector("[data-lightning-out]");
-            const componentAttributes = {};
+                // Function to get URL parameters
+                function getUrlParameter(name) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    return urlParams.get(name);
+                }
+
+                // Extract URL parameters
+                const uuid = getUrlParameter('c__uuid');
+                const language = getUrlParameter('c__language');
+                const channelType = getUrlParameter('c__channelType');
+
+                // Set component attributes
+                const componentAttributes = {
+                    uuid: uuid,
+                    language: language,
+                    channelType: channelType
+                };
 
                 $Lightning.use(
                     appName,
