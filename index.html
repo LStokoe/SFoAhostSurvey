@@ -157,52 +157,52 @@
 
             addStatus('Loading Lightning Out framework...', 'loading');
 
-            // Initialize Lightning Out
-            $Lightning.use(
-                appName,
-                function () {
-                    addStatus('Lightning Out framework loaded', 'success');
-                    addStatus('Creating component: ' + componentName, 'loading');
-                    
-                    console.log('=== Creating Lightning Component ===');
-                    console.log('App:', appName);
-                    console.log('Component:', componentName);
-                    console.log('Attributes:', componentAttributes);
-                    
-                    $Lightning.createComponent(
-                        componentName,
-                        componentAttributes,
-                        targetElement,
-                        function (cmp) {
-                            console.log('=== Component Created Successfully ===');
-                            console.log('Component instance:', cmp);
-                            addStatus('Survey component loaded successfully', 'success');
-                            
-                            // Try to read back the attributes from the component (if accessible)
-                            try {
-                                if (cmp && typeof cmp.get === 'function') {
-                                    const readbackUuid = cmp.get('v.uuid');
-                                    const readbackLang = cmp.get('v.language');
-                                    const readbackChannel = cmp.get('v.channelType');
-                                    console.log('=== Component Attribute Readback ===');
-                                    console.log('UUID from component:', readbackUuid);
-                                    console.log('Language from component:', readbackLang);
-                                    console.log('Channel Type from component:', readbackChannel);
+            // Initialize Lightning Out with error handling
+            try {
+                $Lightning.use(
+                    appName,
+                    function () {
+                        addStatus('Lightning Out framework loaded', 'success');
+                        addStatus('Creating component: ' + componentName, 'loading');
+                        
+                        console.log('=== Creating Lightning Component ===');
+                        console.log('App:', appName);
+                        console.log('Component:', componentName);
+                        console.log('Attributes:', componentAttributes);
+                        
+                        $Lightning.createComponent(
+                            componentName,
+                            componentAttributes,
+                            targetElement,
+                            function (cmp) {
+                                console.log('=== Component Created Successfully ===');
+                                console.log('Component instance:', cmp);
+                                addStatus('Survey component loaded successfully', 'success');
+                                
+                                // Try to read back the attributes from the component (if accessible)
+                                try {
+                                    if (cmp && typeof cmp.get === 'function') {
+                                        const readbackUuid = cmp.get('v.uuid');
+                                        const readbackLang = cmp.get('v.language');
+                                        const readbackChannel = cmp.get('v.channelType');
+                                        console.log('=== Component Attribute Readback ===');
+                                        console.log('UUID from component:', readbackUuid);
+                                        console.log('Language from component:', readbackLang);
+                                        console.log('Channel Type from component:', readbackChannel);
+                                    }
+                                } catch (e) {
+                                    console.log('Note: Cannot read attributes from LWC component (this is expected for LWC)');
                                 }
-                            } catch (e) {
-                                console.log('Note: Cannot read attributes from LWC component (this is expected for LWC)');
                             }
-                        }
-                    );
-                },
-                lightningEndpoint,
-                function(error) {
-                    // Error callback
-                    console.error('=== Lightning Out Error ===');
-                    console.error(error);
-                    addStatus('ERROR: Failed to load Lightning Out - ' + error, 'error');
-                }
-            );
+                        );
+                    },
+                    lightningEndpoint
+                );
+            } catch (error) {
+                console.error('=== Lightning Out Initialization Error ===');
+                console.error(error);
+                addStatus('ERROR: Failed to initialize Lightning Out - ' + error.message, 'error');
+            }
         </script>
     </body>
 </html>
