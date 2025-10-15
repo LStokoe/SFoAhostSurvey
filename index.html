@@ -1,58 +1,208 @@
+<!-- Test page to verify URL parameter passing to Lightning Out component -->
+<!-- Example URL: TestSurveyPage.html?c__uuid=test-123&c__language=en&c__channelType=Web -->
+
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Survey Parameter Test</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                background-color: #f5f5f5;
+            }
+            .debug-panel {
+                background-color: #fff;
+                border: 2px solid #0176d3;
+                border-radius: 8px;
+                padding: 20px;
+                margin-bottom: 20px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .debug-panel h2 {
+                margin-top: 0;
+                color: #0176d3;
+            }
+            .param-item {
+                margin: 10px 0;
+                padding: 10px;
+                background-color: #f4f6f9;
+                border-left: 4px solid #0176d3;
+            }
+            .param-label {
+                font-weight: bold;
+                color: #333;
+            }
+            .param-value {
+                color: #0176d3;
+                font-family: monospace;
+            }
+            .status {
+                padding: 10px;
+                margin: 10px 0;
+                border-radius: 4px;
+            }
+            .status.loading {
+                background-color: #ffeaa7;
+                border-left: 4px solid #fdcb6e;
+            }
+            .status.success {
+                background-color: #d4edda;
+                border-left: 4px solid #28a745;
+            }
+            .status.error {
+                background-color: #f8d7da;
+                border-left: 4px solid #dc3545;
+            }
+        </style>
     </head>
 
     <body>
-        <h1>Lightning Out GitHub Page</h1>
+        <h1>Survey Component Parameter Test</h1>
         
-        <div id="lightning-out"></div>
+        <div class="debug-panel">
+            <h2>URL Parameters Detected</h2>
+            <div id="url-params"></div>
+        </div>
+
+        <div class="debug-panel">
+            <h2>Component Loading Status</h2>
+            <div id="status-container">
+                <div class="status loading">Initializing Lightning Out...</div>
+            </div>
+        </div>
+
+        <div class="debug-panel">
+            <h2>Survey Component</h2>
+            <div id="lightning-out" data-lightning-out="true"></div>
+        </div>
+
+        <!-- Load Lightning Out framework -->
         <script src="https://lego--lilychina.sandbox.experience.sfcrmapps.cn/lightning/lightning.out.js"></script>
         
-        <div data-lightning-out="true">
-            
-            <script>
-                const appName = 'c:srv_HostSurvey';
-                const componentName = 'c:srv_SurveyUI';
-                const lightningEndpoint = 'https://lego--lilychina.sandbox.experience.sfcrmapps.cn';
-                const targetElement = document.querySelector("[data-lightning-out]");
+        <script>
+            // Configuration
+            const appName = 'c:srv_HostSurvey';
+            const componentName = 'c:srv_SurveyUI';
+            const lightningEndpoint = 'https://lego--lilychina.sandbox.experience.sfcrmapps.cn';
+            const targetElement = document.querySelector("[data-lightning-out]");
+            const statusContainer = document.getElementById('status-container');
+            const urlParamsContainer = document.getElementById('url-params');
 
-                // Function to get URL parameters
-                function getUrlParameter(name) {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const value = urlParams.get(name);
-                    console.log(`URL Parameters at start of function: ${name}, Value: ${value}`);
-                    return value;
+            // Utility function to add status messages
+            function addStatus(message, type = 'loading') {
+                const statusDiv = document.createElement('div');
+                statusDiv.className = `status ${type}`;
+                statusDiv.textContent = message;
+                statusContainer.appendChild(statusDiv);
+                console.log(`[Status] ${message}`);
             }
 
-                const uuid = getUrlParameter('c__uuid');
-                const language = getUrlParameter('c__language');
-                const channelType = getUrlParameter('c__channelType');
+            // Function to get and display URL parameters
+            function getUrlParameter(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const value = urlParams.get(name);
+                console.log(`[URL Param] ${name} = ${value}`);
+                return value;
+            }
 
-                const componentAttributes = {
-                    uuid: uuid,
-                    language: language,
-                    channelType: channelType
-                };
+            // Display all URL parameters
+            function displayUrlParameters() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const params = {};
+                
+                // Collect all parameters
+                urlParams.forEach((value, key) => {
+                    params[key] = value;
+                });
 
-                $Lightning.use(
-                    appName,
-                    function () {
-                        $Lightning.createComponent(
-                            componentName,
-                            componentAttributes,
-                            targetElement,
-                            function (cmp) { 
-                                console.log('The component was created.');
-                                console.log('component name; ', componentName);
-                                console.log('component attributes to be passed into aura; ', componentAttributes);
+                // Display in UI
+                if (Object.keys(params).length === 0) {
+                    urlParamsContainer.innerHTML = '<p style="color: #dc3545;">WARNING: No URL parameters found! Add parameters to the URL like: ?c__uuid=test-123&c__language=en&c__channelType=Web</p>';
+                } else {
+                    let html = '';
+                    for (const [key, value] of Object.entries(params)) {
+                        html += `
+                            <div class="param-item">
+                                <span class="param-label">${key}:</span> 
+                                <span class="param-value">${value || '(empty)'}</span>
+                            </div>
+                        `;
+                    }
+                    urlParamsContainer.innerHTML = html;
+                }
+            }
+
+            // Get URL parameters
+            console.log('=== Starting Parameter Extraction ===');
+            const uuid = getUrlParameter('c__uuid');
+            const language = getUrlParameter('c__language');
+            const channelType = getUrlParameter('c__channelType') || 'Web';
+
+            // Display URL parameters
+            displayUrlParameters();
+
+            // Component attributes to pass to Lightning component
+            const componentAttributes = {
+                uuid: uuid,
+                language: language,
+                channelType: channelType
+            };
+
+            console.log('=== Component Attributes ===');
+            console.log('Attributes to be passed:', componentAttributes);
+            console.log('===========================');
+
+            addStatus('Loading Lightning Out framework...', 'loading');
+
+            // Initialize Lightning Out
+            $Lightning.use(
+                appName,
+                function () {
+                    addStatus('Lightning Out framework loaded', 'success');
+                    addStatus('Creating component: ' + componentName, 'loading');
+                    
+                    console.log('=== Creating Lightning Component ===');
+                    console.log('App:', appName);
+                    console.log('Component:', componentName);
+                    console.log('Attributes:', componentAttributes);
+                    
+                    $Lightning.createComponent(
+                        componentName,
+                        componentAttributes,
+                        targetElement,
+                        function (cmp) {
+                            console.log('=== Component Created Successfully ===');
+                            console.log('Component instance:', cmp);
+                            addStatus('Survey component loaded successfully', 'success');
+                            
+                            // Try to read back the attributes from the component (if accessible)
+                            try {
+                                if (cmp && typeof cmp.get === 'function') {
+                                    const readbackUuid = cmp.get('v.uuid');
+                                    const readbackLang = cmp.get('v.language');
+                                    const readbackChannel = cmp.get('v.channelType');
+                                    console.log('=== Component Attribute Readback ===');
+                                    console.log('UUID from component:', readbackUuid);
+                                    console.log('Language from component:', readbackLang);
+                                    console.log('Channel Type from component:', readbackChannel);
+                                }
+                            } catch (e) {
+                                console.log('Note: Cannot read attributes from LWC component (this is expected for LWC)');
                             }
-                        );
-                    },
-                    lightningEndpoint
-                );
-            </script>
-        </div>
+                        }
+                    );
+                },
+                lightningEndpoint,
+                function(error) {
+                    // Error callback
+                    console.error('=== Lightning Out Error ===');
+                    console.error(error);
+                    addStatus('ERROR: Failed to load Lightning Out - ' + error, 'error');
+                }
+            );
+        </script>
     </body>
 </html>
